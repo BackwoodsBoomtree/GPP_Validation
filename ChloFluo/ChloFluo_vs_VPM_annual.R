@@ -23,8 +23,4 @@ writeCDF(vpm, "G:/ChloFluo/comps/vpm/VPM.1deg.2019.annual.nc",
          varname = "gpp", longname = "VPM GPP", unit = "g C/m-2/day-1",
          missval = -9999, overwrite = TRUE)
 
-
-
-
-annual_mean[annual_mean > 15] <- 15
 plot(annual_diff, col = viridis(15))
