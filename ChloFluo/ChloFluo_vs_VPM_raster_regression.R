@@ -5,7 +5,7 @@ vpm_file <- "G:/ChloFluo/comps/vpm/VPM.1deg.2019.nc"
 x_name   <- "gpp"
 y_name   <- "gpp"
 out_dir  <- "G:/ChloFluo/comps/vpm/raster_regressions"
-out_name <- "ChlFluo_vs_VPM.v01.1deg.CF80.2019.clipfill.nc"
+out_name <- "ChlFluo_vs_VPM.v01.1deg.CF80.2019.clipfill"
 f_name   <- NA # Filter by value. Example, error, std, or n. If none use NA.
 f_thresh <- 30  # Values => will be kept
 
