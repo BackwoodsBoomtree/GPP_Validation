@@ -1,13 +1,13 @@
 library(raster)
 
-cf_file  <- "G:/ChloFluo/product/v01/1deg/clipfill/ChloFluo.GPP.v01.1deg.CF80.2019.clipfill.nc"
-vpm_file <- "G:/ChloFluo/comps/vpm/VPM.1deg.2019.nc"
-y_name   <- "gpp"
-x_name   <- "gpp"
-out_dir  <- "G:/ChloFluo/comps/vpm/raster_regressions"
-out_name <- "ChlFluo_vs_VPM.v01.1deg.CF80.2019.clipfill"
-f_name   <- NA # Filter by value. Example, error, std, or n. If none use NA.
-f_thresh <- 30  # Values => will be kept
+cf_file    <- "G:/ChloFluo/product/v01/1deg/clipfill/ChloFluo.GPP.v01.1deg.CF80.2019.clipfill.nc"
+stress_file <- "G:/ChloFluo/input/stress/1deg/stress.8-day.1deg.2019.nc"
+y_name     <- "gpp"
+x_name     <- "stress"
+out_dir    <- "G:/ChloFluo/comps/stress/raster_regressions"
+out_name   <- "ChlFluo_vs_Stress.v01.1deg.CF80.2019.clipfill"
+f_name     <- NA # Filter by value. Example, error, std, or n. If none use NA.
+f_thresh   <- 30  # Values => will be kept
 
 rastlm <- function(x) {
   full <- length(x)
@@ -30,7 +30,6 @@ rastlm <- function(x) {
     return(c(r2, pval, slope, intercept, rmse, n)) 
   }
 }
-
 
 rast_reg <- function(y_file, x_file, y_name, x_name, out_dir, out_name) {
   
@@ -71,4 +70,4 @@ rast_reg <- function(y_file, x_file, y_name, x_name, out_dir, out_name) {
   
 }
 
-rast_reg(cf_file, vpm_file, y_name, x_name, out_dir, out_name)
+rast_reg(cf_file, stress_file, y_name, x_name, out_dir, out_name)
