@@ -29,13 +29,13 @@ crs(coastlines)
 #### Load the data ####
 
 cf_annual_mean   <- raster("G:/ChloFluo/product/v01/1deg/clipfill/annual/ChloFluo.GPP.v01.1deg.CF80.2019.clipfill.annual.nc")
-vpm_annual_mean  <- raster("G:/ChloFluo/comps/vpm/VPM.1deg.2019.annual.nc")
-diff_annual_mean <- raster("G:/ChloFluo/comps/vpm/ChloFluo-VPM.v01.1deg.CF80.2019.annual.nc")
-r2_map           <- raster("G:/ChloFluo/comps/vpm/raster_regressions/ChlFluo_vs_VPM.v01.1deg.CF80.2019.clipfill_Rsquare.tif")
-pval_map         <- raster("G:/ChloFluo/comps/vpm/raster_regressions/ChlFluo_vs_VPM.v01.1deg.CF80.2019.clipfill_Pval.tif")
+sif_annual_mean  <- raster("G:/ChloFluo/comps/sif/VPM.1deg.2019.annual.nc")
+diff_annual_mean <- raster("G:/ChloFluo/comps/sif/ChloFluo-TROPOMI_SIF.v01.1deg.CF80.2019.annual.nc")
+r2_map           <- raster("G:/ChloFluo/comps/sif/raster_regressions/ChlFluo_vs_TROPOMI_SIF.v01.1deg.CF80.2019.clipfill_Rsquare.tif")
+pval_map         <- raster("G:/ChloFluo/comps/sif/raster_regressions/ChlFluo_vs_TROPOMI_SIF.v01.1deg.CF80.2019.clipfill_Pval.tif")
 
-# Mask vpm by cf
-vpm_annual_mean <- mask(vpm_annual_mean, cf_annual_mean)
+# Mask sif by cf
+sif_annual_mean <- mask(sif_annual_mean, cf_annual_mean)
 
 # Mask variables out by pvalue
 pval_map[pval_map > 0.05] <- NA
@@ -50,13 +50,13 @@ diff_lat <- diff_lat[-(61:80)]
 
 # Means
 mean_cf  <- round2(cellStats(cf_annual_mean, mean, na.rm=T), 2)
-mean_vpm <- round2(cellStats(vpm_annual_mean, mean, na.rm=T), 2)
+mean_sif <- round2(cellStats(sif_annual_mean, mean, na.rm=T), 2)
 
 # Set thresholds for visual mapping
 diff_annual_mean[diff_annual_mean < -3.0] <- -3.0
 diff_annual_mean[diff_annual_mean > 3.0]  <- 3.0
 cf_annual_mean[cf_annual_mean > 8 ]   <- 8
-vpm_annual_mean[vpm_annual_mean > 8 ] <- 8
+sif_annual_mean[sif_annual_mean > 8 ] <- 8
 
 
 #### PLOT STUFF ####
@@ -66,11 +66,11 @@ gpp.col <- viridis(100)
 r2.col <- plasma(100)
 
 labs <- c(expression(paste("ChloFluo Mean Annual GPP 2019")),
-          expression(paste("VPM Mean Annual GPP 2019")),
-          expression(paste("GPP Difference: ChloFluo - VPM")),
-          expression(paste("Correlation for ChloFluo vs VPM")))
+          expression(paste("TROPOMI Mean Annual SIF 2019")),
+          expression(paste("Normalized Difference: ChloFluo - SIFM")),
+          expression(paste("Correlation for ChloFluo vs TROPOMI SIF")))
 
-pdf("G:/ChloFluo/comps/vpm/ChloFluo_vs_VPM_comparisons_black.pdf", width=7.5, height=6, compress=FALSE)
+pdf("G:/ChloFluo/comps/sif/ChloFluo_vs_TROPOSIF_comparisons_black.pdf", width=7.5, height=6, compress=FALSE)
 
 par(mfrow=c(3,2),oma=c(0,0.25,1.25,0), bg = "black")
 
@@ -103,26 +103,26 @@ rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4], col = NA, border =
 ##### VPM ####
 
 op <- par(mar = c(0,0,0.25,0.25), bg = "black")
-plot(vpm_annual_mean, ext=c(-180,180,-80,80), axes=F, xaxs="i", yaxs="i", horizontal=T, legend=F, col = NA)
+plot(sif_annual_mean, ext=c(-180,180,-80,80), axes=F, xaxs="i", yaxs="i", horizontal=T, legend=F, col = NA)
 rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = NA, border = "white")
 plot(coastlines, add = TRUE, border = NA, col = rgb(0.20,0.20,0.20))
 rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = NA, border = "white")
-plot(vpm_annual_mean, col=gpp.col,  ext=c(-180,180,-80,80), axes=F, xaxs="i", yaxs="i", horizontal=T, legend=F, add=T)
+plot(sif_annual_mean, col=gpp.col,  ext=c(-180,180,-80,80), axes=F, xaxs="i", yaxs="i", horizontal=T, legend=F, add=T)
 mtext(3, text=labs[1], cex= 0.85, col = "white")
 mtext(3, text="b", cex= 0.85, adj=0, font=2, col = "white")
 
-plot(vpm_annual_mean, legend.only=TRUE, col=gpp.col, horizontal=T, legend.width=2, legend.shrink=0.75,
+plot(sif_annual_mean, legend.only=TRUE, col=gpp.col, horizontal=T, legend.width=2, legend.shrink=0.75,
      legend.args = list(text=expression(paste("g C m"^"-2"*"day"^"-1")), side = 1, line = -2, cex=0.70, col = "white"),
      axis.args = list(line = -1.05, cex.axis=1, tick=F, at=c(0,8), labels=c("0",">8"), col.axis = "white"),
      smallplot=c(0.40,0.90,0.2,0.25)); par(mar = par("mar"))
 
 par(new=TRUE)
 op <- par(mar = c(2.1,0.25,8,21)) # Set margins
-hist(vpm_annual_mean, col=rgb(0.30,0.30,0.30), breaks=10, ylim=c(0,4500), xlim=c(0,8), xaxs="i", yaxs="i", ann=FALSE, axes=FALSE)
+hist(sif_annual_mean, col=rgb(0.30,0.30,0.30), breaks=10, ylim=c(0,4500), xlim=c(0,8), xaxs="i", yaxs="i", ann=FALSE, axes=FALSE)
 rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4], col = "black", border = "white")
 abline(v=mean_cf, col=rgb(206,97,75,max=255))
-axis(3, tck=F, labels=mean_vpm, at=mean_vpm, mgp=c(3, 0.1, 0), col.axis = "white")
-hist(vpm_annual_mean, col=rgb(0.30,0.30,0.30), breaks=10, ylim=c(0,4500), xlim=c(0,8), xaxs="i", yaxs="i", ann=FALSE, axes=FALSE, add=T)
+axis(3, tck=F, labels=mean_sif, at=mean_sif, mgp=c(3, 0.1, 0), col.axis = "white")
+hist(sif_annual_mean, col=rgb(0.30,0.30,0.30), breaks=10, ylim=c(0,4500), xlim=c(0,8), xaxs="i", yaxs="i", ann=FALSE, axes=FALSE, add=T)
 rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4], col = NA, border = "white")
 
 
