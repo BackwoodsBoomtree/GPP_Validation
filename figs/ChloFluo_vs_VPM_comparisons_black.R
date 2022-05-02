@@ -108,7 +108,7 @@ rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = NA, border = 
 plot(coastlines, add = TRUE, border = NA, col = rgb(0.20,0.20,0.20))
 rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = NA, border = "white")
 plot(vpm_annual_mean, col=gpp.col,  ext=c(-180,180,-80,80), axes=F, xaxs="i", yaxs="i", horizontal=T, legend=F, add=T)
-mtext(3, text=labs[1], cex= 0.85, col = "white")
+mtext(3, text=labs[2], cex= 0.85, col = "white")
 mtext(3, text="b", cex= 0.85, adj=0, font=2, col = "white")
 
 plot(vpm_annual_mean, legend.only=TRUE, col=gpp.col, horizontal=T, legend.width=2, legend.shrink=0.75,
