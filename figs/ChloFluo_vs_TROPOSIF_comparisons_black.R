@@ -78,7 +78,7 @@ r2.col    <- plasma(100)
 labs <- c(expression(paste("ChloFluo Mean Annual GPP 2019")),
           expression(paste("TROPOMI Mean Annual SIF 2019")),
           expression(paste("Normalized Difference: ChloFluo - SIF")),
-          expression(paste("Correlation for ChloFluo vs TROPOMI SIF")))
+          expression(paste(" ChloFluo GPP vs TROPOMI SIF")))
 
 pdf("G:/ChloFluo/comps/sif/ChloFluo_vs_TROPOSIF_comparisons_black.pdf", width=7.5, height=6, compress=FALSE)
 
