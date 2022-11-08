@@ -3,7 +3,7 @@ library(viridis)
 library(rgdal)
 library(RColorBrewer)
 
-out_name <- "G:/ChloFluo/comps/tropical_comparisons_black.pdf"
+out_name <- "G:/ChloFluo/comps/tropical_comparisons.pdf"
 
 cf_file    <- "G:/ChloFluo/product/v01/1deg/clipfill/ChloFluo.GPP.v01.1deg.CF80.2019.clipfill.nc"
 fcom_file  <- "G:/FluxCom/RS/GPP.RS_V006.FP-ALL.MLM-ALL.METEO-NONE.720_360.8daily.2019.nc"
