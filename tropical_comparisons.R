@@ -16,7 +16,7 @@ roi_amazon <- vect("G:/Amazon_shp/Amazon_poly.shp") # Amazon
 
 congo_lon <- c(10, 29, 29, 10, 10)
 congo_lat <- c(3, 3, -3, -3, 3)
-roi_congo <- cbind(c_lon, c_lat)
+roi_congo <- cbind(congo_lon, congo_lat)
 roi_congo <- vect(roi_congo, crs = "+proj=longlat +ellps=WGS84", type = "polygons")
 
 seasia_lon <- c(95, 155, 155, 95, 95)

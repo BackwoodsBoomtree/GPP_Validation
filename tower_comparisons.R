@@ -159,7 +159,9 @@ fcom_ank_month <- to_month(fcom_ank, 2019)
 fsat_ank_month <- to_month(fsat_ank, 2019)
 
 tch_gpp_mean_month <- (tch_gpp_mean[1:12] + tch_gpp_mean[13:24] + tch_gpp_mean[25:36] + tch_gpp_mean[37:48]) / 4
-ank_gpp_mean_month <- (ank_gpp_mean[1:12] + ank_gpp_mean[13:24] + ank_gpp_mean[37:48]) / 3
+
+# Years 2 and 3 for Ank look not right - check paper for this site
+ank_gpp_mean_month <- (ank_gpp_mean[1:12] + ank_gpp_mean[37:48]) / 2
 
 
 ## Plot variables
