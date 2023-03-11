@@ -51,8 +51,8 @@ fcom_one <- aggregate(fcom, 2, fun = mean, na.rm = TRUE)
 ## Plot variables
 x            <- 1:46
 xpos         <- seq(1, 46, by = 4)
-xlabs        <- seq(1, 365, by = 32)
-y_lab_gpp    <- bquote("GPP (g C m"^"-2"*" d"^"-1"*")")
+xlabs        <- seq(1, 365, by = 64)
+y_lab_gpp    <- bquote("Gross Primary Production (g C m"^"-2"*" d"^"-1"*")")
 y_limit_gpp  <- c(0,12)
 
 mag.cols <- magma(11)
@@ -60,11 +60,14 @@ vir.cols <- viridis(7)
 
 map.cols <- colorRampPalette(c("#648FFF", "#785EF0", "#DC267F", "#FE6100","#FFB000"))
 map.cols <- map.cols(11)
+map.cols <- c(map.cols[1], map.cols[11], map.cols[2], map.cols[10], 
+              map.cols[3], map.cols[9], map.cols[4], map.cols[8],
+              map.cols[5], map.cols[7], map.cols[6])
 
 ### PLOT
 cairo_pdf(out_name, width = 7.5, height = 7.25)
 
-par(mfrow = c(4, 3), oma=c(3.0,4,0,0.1))
+par(mfrow = c(4, 3), oma=c(3.0,3.5,0,0.1))
 
 for (i in 1:length(names)) {
   op <- par(mar = c(0.5,0,2.5,0.5))
@@ -88,7 +91,7 @@ for (i in 1:length(names)) {
   axis(1, tck = 0.06, labels = FALSE, at = xpos)
   
   if (i == 10 || i == 11){
-    axis(1, tck = FALSE, mgp=c(3, 0.2, 0), labels = TRUE, at = xpos)
+    axis(1, tck = FALSE, mgp=c(3, 0.2, 0), labels = xlabs, at = seq(1, 46, by = 8))
   }
   
   if (i == 1 || i == 4 || i == 7 || i == 10){
@@ -113,7 +116,7 @@ for (i in 1:length(names)) {
 par(xpd=TRUE)
 plot(regions, axes = FALSE, type = "classes", mar = NA, col = map.cols, 
      ext = c(-180, 180, -60, 80), legend = FALSE)
-legend(-150, -50, legend = seq(1,11), horiz = FALSE, fill = map.cols, bty = "n",
+legend(-165, -50, legend = seq(1,11), horiz = FALSE, fill = map.cols, bty = "n",
        ncol = 6, x.intersp = 0.5)
 mtext(3, text = "TransCom Regions", line = 0.5)
 # box()
