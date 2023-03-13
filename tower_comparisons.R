@@ -7,13 +7,16 @@ out_name <- "G:/ChloFluo/comps/tower_comparisons.pdf"
 
 cf_file    <- "G:/ChloFluo/product/v01/1deg/clipfill/ChloFluo.GPP.v01.1deg.CF80.2019.clipfill.nc"
 fcom_file  <- "G:/FluxCom/RS/GPP.RS_V006.FP-ALL.MLM-ALL.METEO-NONE.720_360.8daily.2019.nc"
-fsat_files <- list.files("G:/FluxSat", full.names = TRUE, pattern = "*.nc")
+fsat_files <- "G:/FluxSat/monthly/1deg/GPP_FluxSat_8day_1deg_v2_2019.nc"
 k34_gep    <- read.csv("G:/SIF_comps/figs/Wu_2016/K34_GEP.csv", header = FALSE)[,2]
 k67_gep    <- read.csv("G:/SIF_comps/figs/Wu_2016/K67_GEP.csv", header = FALSE)[,2]
 rja_gep    <- read.csv("G:/SIF_comps/figs/Wu_2016/RJA_GEP.csv", header = FALSE)[,2]
 cax_gep    <- read.csv("G:/SIF_comps/figs/Wu_2016/CAX_GEP.csv", header = FALSE)[,2]
 tch_gpp    <- read.csv("G:/ChloFluo/comps/tower-data/CG-Tch/FLX_CG-Tch_FLUXNET2015_FULLSET_MM_2006-2009_1-4.csv", header = TRUE)
 ank_gpp    <- read.csv("G:/ChloFluo/comps/tower-data/GH-Ank/FLX_GH-Ank_FLUXNET2015_FULLSET_MM_2011-2014_1-4.csv", header = TRUE)
+
+# Fcom to 1 deg
+fcom <- aggregate(fcom, 2, fun = mean, na.rm = TRUE)
 
 # Get Africa GPP tower data
 tch_gpp_nt <- tch_gpp$GPP_NT_VUT_MEAN
@@ -32,23 +35,23 @@ fsat <- rast(fsat_files, subds = "GPP")
 
 ### Aggregate FluxSat
 
-# Do 8-day temporal aggregation (non-leap year)
-for (i in seq(1, 365, by = 8)) {
-  
-  if (i != 361) {
-    fsat_mean_tmp <- mean(fsat[[i : (i + 7)]], na.rm = TRUE)
-  } else {
-    fsat_mean_tmp <- mean(fsat[[i : (i +  4)]], na.rm = TRUE)
-  }
-  
-  if (i == 1) {
-    fsat_8day <- fsat_mean_tmp
-  } else {
-    fsat_8day <- c(fsat_8day, fsat_mean_tmp)
-  }
-}
-
-fsat <- aggregate(fsat_8day, 20, fun = mean, na.rm = TRUE)
+# # Do 8-day temporal aggregation (non-leap year)
+# for (i in seq(1, 365, by = 8)) {
+#   
+#   if (i != 361) {
+#     fsat_mean_tmp <- mean(fsat[[i : (i + 7)]], na.rm = TRUE)
+#   } else {
+#     fsat_mean_tmp <- mean(fsat[[i : (i +  4)]], na.rm = TRUE)
+#   }
+#   
+#   if (i == 1) {
+#     fsat_8day <- fsat_mean_tmp
+#   } else {
+#     fsat_8day <- c(fsat_8day, fsat_mean_tmp)
+#   }
+# }
+# 
+# fsat <- aggregate(fsat_8day, 20, fun = mean, na.rm = TRUE)
 
 ## Tower
 k34 <- cbind(-60.2093, -2.6091)

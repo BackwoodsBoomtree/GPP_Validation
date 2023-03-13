@@ -1,11 +1,11 @@
 library(raster)
 
-cf_file    <- "G:/ChloFluo/product/v01/1deg/clipfill/ChloFluo.GPP.v01.1deg.CF80.2019.clipfill.nc"
+apar_file  <- "G:/ChloFluo/input/APARchl/1deg/apar.2019.8-day.1deg.nc"
 yield_file <- "G:/ChloFluo/input/yield/1deg/yield.2019.8-day.1deg.nc"
 y_name     <- "aparchl"
 x_name     <- "sif_yield"
-out_dir    <- "G:/ChloFluo/comps/yield/raster_regressions"
-out_name   <- "ChlFluo_vs_SIFyield.v01.1deg.CF80.2019.clipfill"
+out_dir    <- "G:/ChloFluo/comps/aparchl_vs_yield/raster_regressions"
+out_name   <- "APARchl_vs_SIFyield.v01.1deg.CF80.2019.clipfill"
 f_name     <- NA # Filter by value. Example, error, std, or n. If none use NA.
 f_thresh   <- 30  # Values => will be kept
 
@@ -70,4 +70,4 @@ rast_reg <- function(y_file, x_file, y_name, x_name, out_dir, out_name) {
   
 }
 
-rast_reg(cf_file, yield_file, y_name, x_name, out_dir, out_name)
+rast_reg(apar_file, yield_file, y_name, x_name, out_dir, out_name)
