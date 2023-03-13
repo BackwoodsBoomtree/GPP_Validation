@@ -10,15 +10,27 @@ fcom_file  <- "G:/FluxCom/RS/GPP.RS_V006.FP-ALL.MLM-ALL.METEO-NONE.720_360.8dail
 fsat_files <- "G:/FluxSat/monthly/1deg/GPP_FluxSat_8day_1deg_v2_2019.nc"
 tower_locs <- "G:/ChloFluo/comps/tower-data/Sites_Chosen.csv"
 
-# Round up
-round2 = function(x, n) {
+### Can be used for pvalues
+round2 = function(x, n, p) {
   posneg = sign(x)
-  z = abs(x)*10^n
-  z = z + 0.5
-  z = trunc(z)
-  z = z/10^n
-  z*posneg
+  z <- abs(x)*10^n
+  z <- z + 0.5
+  z <- trunc(z)
+  z <- z/10^n
+  z <- z*posneg
+  
+  if (p == TRUE) {
+    if (z < 0.05 && z >= 0.01) {
+      z <- "p < 0.05"
+    } else if (z < 0.01) {
+      z <- "p < 0.01"
+    } else {
+      z <- paste0("p = ", z)
+    }
+  }
+  return(z)
 }
+
 
 cf     <- rast(cf_file, subds = "gpp")
 fcom   <- rast(fcom_file, subds = "GPP")
@@ -245,7 +257,7 @@ tower_names <- c(tower_names[1:3], "BR-K34", tower_names[4:8])
 x            <- 1:12
 x_lab        <- c("J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D")
 y_lab_gpp    <- list(bquote("GPP (g C m"^"-2"*" d"^"-1"*")"))
-y_limit_gpp  <- c(0,14)
+y_limit_gpp  <- c(0,15)
 
 ### PLOT
 cairo_pdf(out_name, width = 7.5, height = 5.25)
@@ -287,17 +299,27 @@ for (i in 1:9){
   fcom_reg <- summary(lm(df_fcom[,i] ~ df_tower[,i]))
   fsat_reg <- summary(lm(df_fsat[,i]  ~ df_tower[,i]))
 
-  cf_r   <- round2(cf_reg$adj.r.squared, 2)
-  fcom_r <- round2(fcom_reg$adj.r.squared, 2)
-  fsat_r <- round2(fsat_reg$adj.r.squared, 2)
+  cf_r   <- round2(cf_reg$adj.r.squared, 2, FALSE)
+  fcom_r <- round2(fcom_reg$adj.r.squared, 2, FALSE)
+  fsat_r <- round2(fsat_reg$adj.r.squared, 2, FALSE)
   
-  cf_p   <- round2(cf_reg$coefficients[2,4], 2)
-  fcom_p <- round2(fcom_reg$coefficients[2,4], 2)
-  fsat_p <- round2(fsat_reg$coefficients[2,4], 2)
+  cf_p   <- round2(cf_reg$coefficients[2,4], 2, TRUE)
+  fcom_p <- round2(fcom_reg$coefficients[2,4], 2, TRUE)
+  fsat_p <- round2(fsat_reg$coefficients[2,4], 2, TRUE)
   
-  cf_report   <- paste0("R2 = ", cf_r, "; p = ", cf_p)
-  fcom_report <- paste0("R2 = ", fcom_r, "; p = ", fcom_p)
-  fsat_report <- paste0("R2 = ", fsat_r, "; p = ", fsat_p)
+  cf_rmse   <- round2(sqrt(mean(cf_reg$residuals^2)), 2, FALSE)
+  fcom_rmse <- round2(sqrt(mean(fcom_reg$residuals^2)), 2, FALSE)
+  fsat_rmse <- round2(sqrt(mean(fsat_reg$residuals^2)), 2, FALSE)
+  
+  if (i == 4) { # Cor is insignificant for K34 for fcom and fsat
+    cf_report   <- paste0("R2 = ", cf_r, "; RMSE = ", cf_rmse)
+    fcom_report <- paste0("R2 = ", fcom_r, "*; RMSE = ", fcom_rmse)
+    fsat_report <- paste0("R2 = ", fsat_r, "*; RMSE = ", fsat_rmse)
+  } else {
+    cf_report   <- paste0("R2 = ", cf_r, "; RMSE = ", cf_rmse)
+    fcom_report <- paste0("R2 = ", fcom_r, "; RMSE = ", fcom_rmse)
+    fsat_report <- paste0("R2 = ", fsat_r, "; RMSE = ", fsat_rmse)
+  }
   
   legend("topright", legend=c(cf_report, fcom_report, fsat_report),
          text.col=c("#DC267F", "#FE6100", "#648FFF"), lty = NA,
@@ -311,13 +333,3 @@ mtext(1, text = "Month", outer = TRUE, line = -0.5)
 mtext(2, text = do.call(expression, y_lab_gpp), outer = TRUE, line = 1)
 
 dev.off()
-
-
-cf_reg <- lm(cf_k34_month~k34_gep)
-summary(cf_reg)
-
-fsat_reg <- lm(fsat_k34_month~k34_gep)
-summary(fsat_reg)
-
-fcom_reg <- lm(fcom_k34_month~k34_gep)
-summary(fcom_reg)
