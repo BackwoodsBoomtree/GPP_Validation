@@ -3,7 +3,7 @@ library(viridis)
 library(rgdal)
 library(RColorBrewer)
 
-out_name    <- "G:/ChloFluo/comps/towers/tower_comparisons_sif"
+out_name    <- "G:/ChloFluo/comps/towers/sif/tower_comparisons_sif"
 
 cf_file       <- "G:/ChloFluo/product/v02/clipfill/ChloFluo.GPP.v02.1deg.CF80.2019.clipfill.nc"
 csif_file     <- "G:/CLIMA/clipfill/a8_gm2_wd1_2019_1X_8D.c3.epar.clipfill.nc"
@@ -137,7 +137,7 @@ x_lab        <- c("J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D")
 y_lab_gpp    <- bquote("GPP (g C m"^"-2"*" d"^"-1"*")")
 y_lab_sif    <- bquote("SIF"[Daily]*" (mW/m"^"2"*"/sr/nm)")
 y_limit_gpp  <- c(0,24)
-y_limit_sif  <- c(0,1)
+y_limit_sif  <- c(0,1.2)
 
 run_n        <- (round(length(towers$site) / 9))
 plot_index   <- seq(0, (run_n * 9), by = 9)
@@ -145,8 +145,10 @@ tower_df_len <- length(towers$site)
 
 for (j in 1:run_n) {
   
-  out_file <- paste0(out_name, "_", sprintf("%02d", j), ".pdf")
+  # out_file <- paste0(out_name, "_", sprintf("%02d", j), ".pdf")
   # cairo_pdf(out_file, width = 8, height = 6.25)
+  # out_file <- paste0(out_name, "_", sprintf("%02d", j), ".svg")
+  # svg(out_file, width = 8, height = 6.25)
   
   par(mfrow = c(3, 3), oma=c(1,3,2.5,3))
   

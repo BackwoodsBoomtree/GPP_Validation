@@ -3,7 +3,7 @@ library(viridis)
 library(rgdal)
 library(RColorBrewer)
 
-out_name    <- "G:/ChloFluo/comps/towers/tower_comparisons_stress"
+out_name    <- "G:/ChloFluo/comps/towers/stress/tower_comparisons_stress"
 
 cf_file       <- "G:/ChloFluo/product/v02/clipfill/ChloFluo.GPP.v02.1deg.CF80.2019.clipfill.nc"
 wscalar_file  <- "G:/ChloFluo/input/wscalar/1deg/wscalar.8-day.1deg.2019.nc"
@@ -13,6 +13,9 @@ sif_file      <- "G:/ChloFluo/input/SIF/1deg/clipfill/SIFqc.8day.1deg.veg_only.C
 tower_list    <- "G:/ChloFluo/comps/tower-data/Joiner_2020_Sites.csv"
 tower_dir     <- "G:/ChloFluo/comps/tower-data/unzipped"
 c3_c4_file    <- "G:/ChloFluo/input/C3C4/ISLSCP/c4_percent_1d.nc"
+
+kick_out_sites <- c("AU-ASM", "AU-Gin", "ES-LgS", "GF-Guy", "IT-Cp2", "IT-Cpz",
+                    "NL-Hor", "NL-Loo", "RU-Cok", "US-KS2")
 
 ### Can be used for pvalues
 round2 = function(x, n, p) {
@@ -93,6 +96,13 @@ get_tower_gpp <- function(f) {
   return(list(annual_mean, gpp_mean, df_years))
 }
 
+extract_tower_var <- function(f, loc) {
+  site_data <- extract(f, loc)
+  site_data <- unlist(site_data, use.names = FALSE)[-c(1)]
+  site_data[is.nan(site_data)] <- NA
+  return(site_data)
+}
+
 cf      <- rast(cf_file, subds = "gpp")
 wscalar <- rast(wscalar_file, subds = "wscalar")
 tscalar <- rast(tscalar_files, subds = "tscalar")
@@ -101,7 +111,11 @@ sif     <- rast(sif_file, subds = "sif743_qc")
 towers  <- read.csv(tower_list, header = TRUE)
 c3_c4   <- rast(c3_c4_file, subds = "Band1")
 
-### Get csv files for each tower
+### Get csv files for each tower after filtering
+for (i in 1:length(kick_out_sites)) {
+  towers <- subset(towers, site != kick_out_sites[i])
+}
+
 tower_dirs <- list.dirs(tower_dir, full.names = TRUE, recursive = FALSE)
 for (i in 1:length(towers$site)) {
   site       <- towers$site[i] # from tower df
@@ -130,18 +144,21 @@ y_limit_sif  <- c(0,1)
 
 run_n      <- (round(length(towers$site) / 9))
 plot_index <- seq(0, (run_n * 9), by = 9)
+tower_df_len <- length(towers$site)
 
 for (j in 1:run_n) {
   
-  out_file <- paste0(out_name, "_", sprintf("%02d", j), ".pdf")
+  # out_file <- paste0(out_name, "_", sprintf("%02d", j), ".pdf")
   # cairo_pdf(out_file, width = 8, height = 6.25)
+  out_file <- paste0(out_name, "_", sprintf("%02d", j), ".svg")
+  svg(out_file, width = 8, height = 6.25)
   
   par(mfrow = c(3, 3), oma=c(1,3,2.5,3))
   
   for (i in 1:9) {
     i_adj <- i + plot_index[j]
     
-    if (i_adj < 107) {
+    if (i_adj <= tower_df_len) {
       site_name  <- paste0(towers$site[i_adj], " (", towers$veg[i_adj], ")")
       tower_file <- towers$data[i_adj]
       
@@ -151,19 +168,13 @@ for (j in 1:run_n) {
       # Get model GPP and SIF data at tower
       tower_loc <- vect(cbind(towers$lon[i_adj], towers$lat[i_adj]), crs = "+proj=longlat +ellps=WGS84")
       
-      cf_site    <- extract(cf, tower_loc)
-      wscalar_site  <- extract(wscalar, tower_loc)
-      tscalar_site  <- extract(tscalar, tower_loc)
-      stress_site  <- extract(stress, tower_loc)
-      sif_site   <- extract(sif, tower_loc)
-      c3_c4_site <- extract(c3_c4, tower_loc)[[2]]
+      cf_site      <- extract_tower_var(cf, tower_loc)
+      wscalar_site <- extract_tower_var(wscalar, tower_loc)
+      tscalar_site <- extract_tower_var(tscalar, tower_loc)
+      stress_site  <- extract_tower_var(stress, tower_loc)
+      sif_site     <- extract_tower_var(sif, tower_loc)
+      c3_c4_site   <- extract(c3_c4, tower_loc)[[2]]
       c3_c4_report <- paste0("C4: ", c3_c4_site, "%")
-      
-      cf_site   <- unlist(cf_site, use.names = FALSE)[-c(1)]
-      wscalar_site <- unlist(wscalar_site, use.names = FALSE)[-c(1)]
-      tscalar_site <- unlist(tscalar_site, use.names = FALSE)[-c(1)]
-      stress_site <- unlist(stress_site, use.names = FALSE)[-c(1)]
-      sif_site  <- unlist(sif_site, use.names = FALSE)[-c(1)]
       
       cf_site_month   <- to_month(cf_site, 2019)
       wscalar_site_month <- to_month(wscalar_site, 2019)
@@ -178,7 +189,7 @@ for (j in 1:run_n) {
       plot(x, tower_gpp_data, col = "black", type = "l", axes = FALSE, lwd = 2, lty = 2, xaxs="i", ylim = y_limit_gpp, ylab = "")
       
 
-      if (all(!is.na(cf_site_month)) && all(!is.nan(cf_site_month))) {
+      if (all(is.na(cf_site_month)) == FALSE) {
         lines(x, cf_site_month, col = "#DC267F", lwd = 2)
         cf_reg    <- summary(lm(cf_site_month ~ tower_gpp_data))
         cf_r      <- round2(cf_reg$adj.r.squared, 2, FALSE)
@@ -212,7 +223,7 @@ for (j in 1:run_n) {
       }
       
       # SIF and scalars
-      if (all(!is.na(sif_site_month)) && all(!is.nan(sif_site_month))) {
+      if (all(is.na(sif_site_month)) == FALSE) {
         par(new = TRUE)
         plot(x, sif_site_month, col = "gray50", type = "l", axes = FALSE, lwd = 2, lty = 2, xaxs="i", ylim = y_limit_sif, ylab = "")
         
@@ -286,7 +297,6 @@ for (j in 1:run_n) {
       } else {
         stress_report <- paste0("*R2 = ", stress_r, "; RMSE = ", stress_rmse)
       }
-
       
       mtext(3, text = site_name, line = 0)
       
@@ -302,7 +312,7 @@ for (j in 1:run_n) {
       
       box()
       
-    } else if (i_adj == 107) {
+    } else if (i_adj == (tower_df_len + 1)) {
       k34_details           <- t(data.frame(c("BR-K34", -2.6091, -60.2093, 1999, 2006, "EBF", "Wu et al. (2015)", 
                                               "G:/SIF_comps/figs/Wu_2016/K34_GEP.csv", rep(NA, 15))))
       colnames(k34_details) <- colnames(towers)
@@ -313,30 +323,24 @@ for (j in 1:run_n) {
       k34_gpp <- read.csv("G:/SIF_comps/figs/Wu_2016/K34_GEP.csv", header = FALSE)[,2]
       k34     <- vect(cbind(-60.2093, -2.6091), crs = "+proj=longlat +ellps=WGS84")
       
-      cf_k34     <- extract(cf, k34)
-      wscalar_k34   <- extract(wscalar, k34)
-      tscalar_k34   <- extract(tscalar, k34)
-      stress_k34   <- extract(stress, k34)
-      sif_k34    <- extract(sif, k34)
-      c3_c4_site <- extract(c3_c4, k34)
+      cf_k34       <- extract_tower_var(cf, k34)
+      wscalar_k34  <- extract_tower_var(wscalar, k34)
+      tscalar_k34  <- extract_tower_var(tscalar, k34)
+      stress_k34   <- extract_tower_var(stress, k34)
+      sif_k34      <- extract_tower_var(sif, k34)
+      c3_c4_site   <- extract(c3_c4, k34)
       c3_c4_report <- paste0("C4: ", c3_c4_site, "%")[[2]]
       
-      cf_k34   <- unlist(cf_k34, use.names = FALSE)[-c(1)]
-      wscalar_k34 <- unlist(wscalar_k34, use.names = FALSE)[-c(1)]
-      tscalar_k34 <- unlist(tscalar_k34, use.names = FALSE)[-c(1)]
-      stress_k34 <- unlist(stress_k34, use.names = FALSE)[-c(1)]
-      sif_k34  <- unlist(sif_k34, use.names = FALSE)[-c(1)]
-      
-      cf_site_month   <- to_month(cf_k34, 2019)
+      cf_site_month      <- to_month(cf_k34, 2019)
       wscalar_site_month <- to_month(wscalar_k34, 2019)
       tscalar_site_month <- to_month(tscalar_k34, 2019)
-      stress_site_month <- to_month(stress_k34, 2019)
-      sif_site_month  <- to_month(sif_k34, 2019)
+      stress_site_month  <- to_month(stress_k34, 2019)
+      sif_site_month     <- to_month(sif_k34, 2019)
       
       plot(x, k34_gpp, col = "black", type = "l", axes = FALSE, lwd = 2, lty = 2, xaxs="i", ylim = y_limit_gpp, ylab = "")
       
 
-      if (all(!is.na(cf_site_month)) && all(!is.nan(cf_site_month))) {
+      if (all(is.na(cf_site_month)) == FALSE) {
         lines(x, cf_site_month, col = "#DC267F", lwd = 2)
         cf_reg    <- summary(lm(cf_site_month ~ k34_gpp))
         cf_r      <- round2(cf_reg$adj.r.squared, 2, FALSE)
@@ -356,7 +360,7 @@ for (j in 1:run_n) {
       
       # SIF and scalars
 
-      if (all(!is.na(sif_site_month)) && all(!is.nan(sif_site_month))) {
+      if (all(is.na(sif_site_month)) == FALSE) {
         par(new = TRUE)
         plot(x, sif_site_month, col = "gray50", type = "l", axes = FALSE, lwd = 2, lty = 2, xaxs="i", ylim = y_limit_sif, ylab = "")
         
@@ -374,7 +378,7 @@ for (j in 1:run_n) {
         }
       }
       # Plot and run regression only if there is data. Add results to tower df
-      if (all(!is.na(wscalar_site_month)) && all(!is.nan(wscalar_site_month))) {
+      if (all(is.na(wscalar_site_month)) == FALSE) {
         lines(x, wscalar_site_month, col = "#648FFF", lwd = 2)
         wscalar_reg    <- summary(lm(wscalar_site_month ~ k34_gpp))
         wscalar_r      <- round2(wscalar_reg$adj.r.squared, 2, FALSE)
@@ -391,7 +395,7 @@ for (j in 1:run_n) {
       } else {
         tscalar_report <- NA
       }
-      if (all(!is.na(tscalar_site_month)) && all(!is.nan(tscalar_site_month))) {
+      if (all(is.na(tscalar_site_month)) == FALSE) {
         lines(x, tscalar_site_month, col = "#FE6100", lwd = 2)
         tscalar_reg    <- summary(lm(tscalar_site_month ~ k34_gpp))
         tscalar_r      <- round2(tscalar_reg$adj.r.squared, 2, FALSE)
@@ -408,7 +412,7 @@ for (j in 1:run_n) {
       } else {
         tscalar_report <- NA
       }
-      if (all(!is.na(stress_site_month)) && all(!is.nan(stress_site_month))) {
+      if (all(is.na(stress_site_month)) == FALSE) {
         lines(x, stress_site_month, col = "black", lwd = 2, lty = 3)
         stress_reg    <- summary(lm(stress_site_month ~ k34_gpp))
         stress_r      <- round2(stress_reg$adj.r.squared, 2, FALSE)
@@ -446,7 +450,7 @@ for (j in 1:run_n) {
   mtext(2, text = as.expression(y_lab_gpp), outer = TRUE, line = 1)
   mtext(4, text = as.expression(y_lab_sif), outer = TRUE, line = 2)
   
-  # dev.off()
+  dev.off()
 }
 
 
