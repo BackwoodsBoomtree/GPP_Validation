@@ -3,7 +3,7 @@ library(viridis)
 library(rgdal)
 library(RColorBrewer)
 
-out_file <- "G:/ChloFluo/comps/fluxcom/ChloFluo_vs_FluxCom_comparisons_black.pdf"
+out_file <- "G:/ChloFluo/comps/fluxcom/ChloFluo_vs_FluxCom_comparisons_black_v2.pdf"
 
 # Round up
 round2 = function(x, n) {
@@ -30,7 +30,7 @@ crs(coastlines)
 
 #### Load the data ####
 
-cf_annual_mean   <- raster("G:/ChloFluo/product/v01/1deg/clipfill/annual/ChloFluo.GPP.v01.1deg.CF80.2019.clipfill.annual.nc")
+cf_annual_mean   <- raster("G:/ChloFluo/product/v02/clipfill/annual/ChloFluo.GPP.v01.1deg.CF80.2019.clipfill.annual.nc")
 gpp              <- brick("G:/FluxCom/RS/GPP.RS_V006.FP-ALL.MLM-ALL.METEO-NONE.720_360.8daily.2019.nc", varname = "GPP")
 r2_map           <- raster("G:/ChloFluo/comps/fluxcom/raster_regressions/ChloFluo_vs_FluxCom.v01.1deg.CF80.2019.clipfill_Rsquare.tif")
 pval_map         <- raster("G:/ChloFluo/comps/fluxcom/raster_regressions/ChloFluo_vs_FluxCom.v01.1deg.CF80.2019.clipfill_Pval.tif")

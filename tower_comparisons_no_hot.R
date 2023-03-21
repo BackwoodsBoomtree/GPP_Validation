@@ -3,12 +3,12 @@ library(viridis)
 library(rgdal)
 library(RColorBrewer)
 
-out_name    <- "G:/ChloFluo/comps/towers/gpp/tower_comparisons_all"
+out_name    <- "G:/ChloFluo/comps/towers/no_hotspot/tower_comparisons_all_no_hot"
 
-cf_file     <- "G:/ChloFluo/product/v02/clipfill/ChloFluo.GPP.v02.1deg.CF80.2019.clipfill.nc"
+cf_file     <- "G:/ChloFluo/product/v02/clipfill/ChloFluo.GPP.v02.1deg.CF80.2019.no.hot.clipfill.nc"
 fcom_file   <- "G:/FluxCom/RS/GPP.RS_V006.FP-ALL.MLM-ALL.METEO-NONE.720_360.8daily.2019.nc"
 fsat_files  <- "G:/FluxSat/monthly/1deg/GPP_FluxSat_8day_1deg_v2_2019.nc"
-sif_file    <- "G:/ChloFluo/input/SIF/1deg/clipfill/SIFqc.8day.1deg.veg_only.CF80.2019.clipfill.nc"
+sif_file    <- "G:/ChloFluo/input/SIF/1deg/clipfill/SIFqc.8day.1deg.veg_only.CF80.2019.no.hot.clipfill.nc"
 tower_list  <- "G:/ChloFluo/comps/tower-data/Joiner_2020_Sites.csv"
 tower_dir   <- "G:/ChloFluo/comps/tower-data/unzipped"
 c3_c4_file  <- "G:/ChloFluo/input/C3C4/ISLSCP/c4_percent_1d.nc"
@@ -145,8 +145,8 @@ plot_index <- seq(0, (run_n * 9), by = 9)
 
 for (j in 1:run_n) {
   
-  # out_file <- paste0(out_name, "_", sprintf("%02d", j), ".pdf")
-  # cairo_pdf(out_file, width = 8, height = 6.25)
+  out_file <- paste0(out_name, "_", sprintf("%02d", j), ".pdf")
+  cairo_pdf(out_file, width = 8, height = 6.25)
   # out_file <- paste0(out_name, "_", sprintf("%02d", j), ".svg")
   # svg(out_file, width = 8, height = 6.25)
   
@@ -424,14 +424,14 @@ for (j in 1:run_n) {
   mtext(2, text = as.expression(y_lab_gpp), outer = TRUE, line = 1)
   mtext(4, text = as.expression(y_lab_sif), outer = TRUE, line = 2)
   
-  # dev.off()
+  dev.off()
 }
 
 
 
 ### HISTOGRAMS ###
 
-cairo_pdf("G:/ChloFluo/comps/towers/gpp/tower_comparisons_all_histograms.pdf", width = 7.5, height = 6)
+cairo_pdf("G:/ChloFluo/comps/towers/no_hotspot/tower_comparisons_no_hot_histograms.pdf", width = 7.5, height = 6)
 
 par(mfrow = c(3, 4), oma=c(3.5,1.5,0,1))
 

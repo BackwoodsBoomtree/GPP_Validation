@@ -392,13 +392,82 @@ for (j in 1:run_n) {
 }
 
 
-# towers_qc <- na.omit(towers)
-# hist(as.numeric(towers_qc$cf_r))
-# hist(as.numeric(towers_qc$csif_r))
-# hist(as.numeric(towers_qc$tscalar_r))
-# hist(as.numeric(towers_qc$sif_r))
-# 
-# hist(as.numeric(towers_qc$cf_rmse))
-# hist(as.numeric(towers_qc$csif_rmse))
-# hist(as.numeric(towers_qc$tscalar_rmse))
-# hist(as.numeric(towers_qc$sif_rmse))
+### HISTOGRAMS ###
+
+svg("G:/ChloFluo/comps/towers/sif/tower_comparisons_sif_histograms.svg", width = 7.5, height = 6)
+
+par(mfrow = c(3, 3), oma=c(3.5,1.5,0,1))
+
+towers_qc <- na.omit(towers)
+
+op <- par(mar = c(0,2,4,0))
+
+# R2
+hist(as.numeric(towers_qc$cf_r), axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(0,45), yaxs = "i")
+axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+box()
+mtext(3, text = "ChloFluo GPP", line = 0.5)
+mtext(1, text = as.expression(bquote("R"^"2")), line = 2)
+
+hist(as.numeric(towers_qc$sif_r), axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(0,45), yaxs = "i")
+axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+box()
+mtext(3, text = "TROPOMI SIF", line = 0.5)
+mtext(1, text = as.expression(bquote("R"^"2")), line = 2)
+
+hist(as.numeric(towers_qc$csif_r), axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(0,45), yaxs = "i")
+axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+box()
+mtext(3, text = "CLIMA SIF", line = 0.5)
+mtext(1, text = as.expression(bquote("R"^"2")), line = 2)
+
+# RMSE
+hist(as.numeric(towers_qc$cf_rmse), axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(0,30), yaxs = "i")
+axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+box()
+mtext(1, text = as.expression(bquote("RMSE")), line = 2)
+
+hist(as.numeric(towers_qc$sif_rmse), axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,0.25), ylim = c(0,70), breaks = 5, yaxs = "i")
+axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+box()
+mtext(1, text = as.expression(bquote("RMSE")), line = 2)
+
+hist(as.numeric(towers_qc$csif_rmse), axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,0.25), ylim = c(0,70), breaks = 5, yaxs = "i")
+axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+box()
+mtext(1, text = as.expression(bquote("RMSE")), line = 2)
+
+# P-value
+cf_p_scale <- towers_qc$cf_p
+cf_p_scale[cf_p_scale > 0.05] <- 0.051
+hist(as.numeric(cf_p_scale), axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,0.06), ylim = c(0,90), breaks = 6, yaxs = "i")
+axis(1, tck = FALSE, mgp=c(3, 0.2, 0), labels = c("0", "0.01", "0.02", "0.03", "0.04", "0.05", ">0.05"), at = seq(0, 0.06, 0.01))
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+mtext(1, text = "p-value", line = 2)
+box()
+
+sif_p_scale <- towers_qc$sif_p
+sif_p_scale[sif_p_scale > 0.05] <- 0.051
+hist(as.numeric(sif_p_scale), axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,0.06), ylim = c(0,90), breaks = 6, yaxs = "i")
+axis(1, tck = FALSE, mgp=c(3, 0.2, 0), labels = c("0", "0.01", "0.02", "0.03", "0.04", "0.05", ">0.05"), at = seq(0, 0.06, 0.01))
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+mtext(1, text = "p-value", line = 2)
+box()
+
+csif_p_scale <- towers_qc$csif_p
+csif_p_scale[csif_p_scale > 0.05] <- 0.051
+hist(as.numeric(csif_p_scale), axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,0.06), ylim = c(0,90), breaks = 6, yaxs = "i")
+axis(1, tck = FALSE, mgp=c(3, 0.2, 0), labels = c("0", "0.01", "0.02", "0.03", "0.04", "0.05", ">0.05"), at = seq(0, 0.06, 0.01))
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+mtext(1, text = "p-value", line = 2)
+box()
+
+mtext(2, text = "Frequency", line = 0, outer = TRUE)
+
+dev.off()
