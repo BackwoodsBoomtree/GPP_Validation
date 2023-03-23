@@ -431,45 +431,53 @@ for (j in 1:run_n) {
 
 ### HISTOGRAMS ###
 
-cairo_pdf("G:/ChloFluo/comps/towers/gpp/tower_comparisons_all_histograms.pdf", width = 7.5, height = 6)
+cairo_pdf("G:/ChloFluo/comps/towers/gpp/tower_comparisons_all_histograms.pdf", width = 9.5, height = 6)
 
-par(mfrow = c(3, 4), oma=c(3.5,1.5,0,1))
+par(mfrow = c(3, 4), oma=c(3.5,2.5,0,0.5))
 
 towers_qc <- na.omit(towers)
 
-op <- par(mar = c(0,2,4,0))
+op <- par(mar = c(0,0.5,4,0))
 
 # R2
-hist(as.numeric(towers_qc$cf_r), axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(0,50), yaxs = "i")
+cf_r_scale <- towers_qc$cf_r
+cf_r_scale[cf_r_scale < 0] <- 0
+hist(as.numeric(cf_r_scale), axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,1), ylim = c(0,50), yaxs = "i")
 axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
 axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
 box()
 mtext(3, text = "ChloFluo GPP", line = 0.5)
 mtext(1, text = as.expression(bquote("R"^"2")), line = 2)
 
-hist(as.numeric(towers_qc$fcom_r), axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(0,50), yaxs = "i")
+fcom_r_scale <- towers_qc$fcom_r
+fcom_r_scale[fcom_r_scale < 0] <- 0
+hist(as.numeric(fcom_r_scale), axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,1), ylim = c(0,50), yaxs = "i")
 axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
-axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), labels = FALSE, las = 2)
 box()
 mtext(3, text = "FluxCom GPP", line = 0.5)
 mtext(1, text = as.expression(bquote("R"^"2")), line = 2)
 
-hist(as.numeric(towers_qc$fsat_r), axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(0,50), yaxs = "i")
+fsat_r_scale <- towers_qc$fsat_r
+fsat_r_scale[fsat_r_scale < 0] <- 0
+hist(as.numeric(fsat_r_scale), axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,1), ylim = c(0,50), yaxs = "i")
 axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
-axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), labels = FALSE, las = 2)
 box()
 mtext(3, text = "FluxSat GPP", line = 0.5)
 mtext(1, text = as.expression(bquote("R"^"2")), line = 2)
 
-hist(as.numeric(towers_qc$sif_r), axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(0,50), yaxs = "i")
+sif_r_scale <- towers_qc$sif_r
+sif_r_scale[sif_r_scale < 0] <- 0
+hist(as.numeric(sif_r_scale), axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,1), ylim = c(0,50), yaxs = "i")
 axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
-axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), labels = FALSE, las = 2)
 box()
 mtext(3, text = "TROPOMI SIF", line = 0.5)
 mtext(1, text = as.expression(bquote("R"^"2")), line = 2)
 
 # RMSE
-hist(as.numeric(towers_qc$cf_rmse), axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,3.5), ylim = c(0,30), yaxs = "i")
+hist(as.numeric(towers_qc$cf_rmse), axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,3.5), ylim = c(0,70), yaxs = "i")
 axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
 axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
 box()
@@ -477,19 +485,19 @@ mtext(1, text = as.expression(bquote("RMSE")), line = 2)
 
 hist(as.numeric(towers_qc$fcom_rmse), axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,3.5), ylim = c(0,70), breaks = 5, yaxs = "i")
 axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
-axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), labels = FALSE, las = 2)
 box()
 mtext(1, text = as.expression(bquote("RMSE")), line = 2)
 
-hist(as.numeric(towers_qc$fsat_rmse), axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,3.5), ylim = c(0,70), breaks = 5, yaxs = "i")
+hist(as.numeric(towers_qc$fsat_rmse), axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,3.5), ylim = c(0,70), yaxs = "i")
 axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
-axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), labels = FALSE, las = 2)
 box()
 mtext(1, text = as.expression(bquote("RMSE")), line = 2)
 
-hist(as.numeric(towers_qc$sif_rmse), axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,0.25), ylim = c(0,70), breaks = 5, yaxs = "i")
+hist(as.numeric(towers_qc$sif_rmse), axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,0.35), ylim = c(0,70), breaks = 5, yaxs = "i")
 axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
-axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), labels = FALSE, las = 2)
 box()
 mtext(1, text = as.expression(bquote("RMSE")), line = 2)
 
@@ -506,7 +514,7 @@ fcom_p_scale <- towers_qc$fcom_p
 fcom_p_scale[fcom_p_scale > 0.05] <- 0.051
 hist(as.numeric(fcom_p_scale), axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,0.06), ylim = c(0,90), breaks = 6, yaxs = "i")
 axis(1, tck = FALSE, mgp=c(3, 0.2, 0), labels = c("0", "0.01", "0.02", "0.03", "0.04", "0.05", ">0.05"), at = seq(0, 0.06, 0.01))
-axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), labels = FALSE, las = 2)
 mtext(1, text = "p-value", line = 2)
 box()
 
@@ -514,7 +522,7 @@ fsat_p_scale <- towers_qc$fsat_p
 fsat_p_scale[fsat_p_scale > 0.05] <- 0.051
 hist(as.numeric(fcom_p_scale), axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,0.06), ylim = c(0,90), breaks = 6, yaxs = "i")
 axis(1, tck = FALSE, mgp=c(3, 0.2, 0), labels = c("0", "0.01", "0.02", "0.03", "0.04", "0.05", ">0.05"), at = seq(0, 0.06, 0.01))
-axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), labels = FALSE, las = 2)
 mtext(1, text = "p-value", line = 2)
 box()
 
@@ -522,10 +530,10 @@ sif_p_scale <- towers_qc$sif_p
 sif_p_scale[sif_p_scale > 0.05] <- 0.051
 hist(as.numeric(sif_p_scale), axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,0.06), ylim = c(0,90), breaks = 6, yaxs = "i")
 axis(1, tck = FALSE, mgp=c(3, 0.2, 0), labels = c("0", "0.01", "0.02", "0.03", "0.04", "0.05", ">0.05"), at = seq(0, 0.06, 0.01))
-axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), labels = FALSE, las = 2)
 mtext(1, text = "p-value", line = 2)
 box()
 
-mtext(2, text = "Frequency", line = 0, outer = TRUE)
+mtext(2, text = "Frequency", line = 1.25, outer = TRUE)
 
 dev.off()
