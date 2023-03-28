@@ -302,6 +302,8 @@ for (j in 1:run_n) {
       
       box()
       
+      # K34
+      
     } else if (i_adj == (tower_df_len + 1)) {
       k34_details           <- t(data.frame(c("BR-K34", -2.6091, -60.2093, 1999, 2006, "EBF", "Wu et al. (2015)", 
                                               "G:/SIF_comps/figs/Wu_2016/K34_GEP.csv", rep(NA, 12))))
