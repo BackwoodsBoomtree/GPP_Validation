@@ -305,7 +305,7 @@ for (j in 1:run_n) {
       # K34
       
     } else if (i_adj == (tower_df_len + 1)) {
-      k34_details           <- t(data.frame(c("BR-K34", -2.6091, -60.2093, 1999, 2006, "EBF", "Wu et al. (2015)", 
+      k34_details           <- t(data.frame(c("BR-K34", -2.6091, -60.2093, "EBF", 1999, 2006, "Wu et al. (2015)", 
                                               "G:/SIF_comps/figs/Wu_2016/K34_GEP.csv", rep(NA, 12))))
       colnames(k34_details) <- colnames(towers)
       
@@ -429,6 +429,88 @@ for (j in 1:run_n) {
   # dev.off()
 }
 
+# Save towers df output
+write.csv(towers, "G:/ChloFluo/comps/tower-data/site_list.csv", row.names = FALSE)
+
+
+# Model RMSE comparisons
+
+cairo_pdf("G:/ChloFluo/comps/rmse_comparisons_v2.pdf", width = 10.5, height = 7)
+
+par(mfrow = c(3, 3), oma=c(0,0,0.5,0.25))
+
+op <- par(mar = c(4,4.5,0,0))
+
+plot(towers$cf_rmse, towers$lat, axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(-60,60), yaxs = "i", col = "#DC267F")
+axis(1, tck = 0.03, mgp=c(3, 0.2, 0))
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+box()
+mtext(1, text = "ChloFluo RMSE", line = 2)
+mtext(2, text = "Latitude", line = 1.75)
+# mtext(3, text = "ChloFluo", line = 0.5)
+
+plot(towers$fcom_rmse, towers$lat, axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(-60,60), yaxs = "i", col = "#FE6100")
+axis(1, tck = 0.03, mgp=c(3, 0.2, 0))
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+box()
+mtext(1, text = "FluxCom RMSE", line = 2)
+mtext(2, text = "Latitude", line = 1.75)
+# mtext(3, text = "FluxCom", line = 0.5)
+
+plot(towers$fsat_rmse, towers$lat, axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(-60,60), yaxs = "i", col = "#648FFF")
+axis(1, tck = 0.03, mgp=c(3, 0.2, 0))
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+box()
+mtext(1, text = "FluxSat RMSE", line = 2)
+mtext(2, text = "Latitude", line = 1.75)
+# mtext(3, text = "FluxSat", line = 0.5)
+
+b <- boxplot(as.numeric(cf_rmse) ~ veg, data = towers, axes = FALSE, xlab = "", ylab = "", main = NA, yaxs = "i", col = "#DC267F", horizontal = TRUE)
+axis(2, tck = FALSE, mgp=c(3, 0.2, 0), at = seq_along(b$names), labels = b$names, las = 2)
+axis(1, tck = 0.03, mgp=c(3, 0.2, 0))
+box()
+mtext(2, text = "Land Cover Type", line = 2.5)
+mtext(1, text = "ChloFluo RMSE", line = 2)
+
+b <- boxplot(as.numeric(fcom_rmse) ~ veg, data = towers, axes = FALSE, xlab = "", ylab = "", main = NA, yaxs = "i", col = "#FE6100", horizontal = TRUE)
+axis(2, tck = FALSE, mgp=c(3, 0.2, 0), at = seq_along(b$names), labels = b$names, las = 2)
+axis(1, tck = 0.03, mgp=c(3, 0.2, 0))
+box()
+mtext(2, text = "Land Cover Type", line = 2.5)
+mtext(1, text = "FluxCom RMSE", line = 2)
+
+b <- boxplot(as.numeric(fsat_rmse) ~ veg, data = towers, axes = FALSE, xlab = "", ylab = "", main = NA, yaxs = "i", col = "#648FFF", horizontal = TRUE)
+axis(2, tck = FALSE, mgp=c(3, 0.2, 0), at = seq_along(b$names), labels = b$names, las = 2)
+axis(1, tck = 0.03, mgp=c(3, 0.2, 0))
+box()
+mtext(2, text = "Land Cover Type", line = 2.5)
+mtext(1, text = "FluxSat RMSE", line = 2)
+
+plot(towers$cf_rmse, towers$fcom_rmse, axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(0,3), yaxs = "i")
+abline(lm(as.numeric(fcom_rmse) ~ as.numeric(cf_rmse), data = towers))
+axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+box()
+mtext(1, text = "ChloFluo RMSE", line = 2)
+mtext(2, text = "FluxCom RMSE", line = 1.75)
+
+plot(towers$cf_rmse, towers$fsat_rmse, axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(0,3), yaxs = "i")
+abline(lm(as.numeric(fsat_rmse) ~ as.numeric(cf_rmse), data = towers))
+axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+box()
+mtext(1, text = "ChloFluo RMSE", line = 2)
+mtext(2, text = "FluxSat RMSE", line = 1.75)
+
+plot(towers$fcom_rmse, towers$fsat_rmse, axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,3), ylim = c(0,3), yaxs = "i")
+abline(lm(as.numeric(fsat_rmse) ~ as.numeric(fcom_rmse), data = towers))
+axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
+axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
+box()
+mtext(1, text = "FluxCom RMSE", line = 2)
+mtext(2, text = "FluxSat RMSE", line = 1.75)
+
+dev.off()
 
 
 ### HISTOGRAMS ###
