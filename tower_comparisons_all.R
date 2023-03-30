@@ -191,9 +191,13 @@ for (j in 1:run_n) {
         fcom_r      <- round2(fcom_reg$adj.r.squared, 2, FALSE)
         fcom_p      <- round2(fcom_reg$coefficients[2,4], 2, FALSE)
         fcom_rmse   <- round2(sqrt(mean(fcom_reg$residuals^2)), 2, FALSE)
-        towers$fcom_r[i_adj]    <- fcom_r
-        towers$fcom_p[i_adj]    <- fcom_p
-        towers$fcom_rmse[i_adj] <- fcom_rmse
+        fcom_sd     <- round2(sd(fcom_site_month, na.rm = TRUE), 2, FALSE)
+        towers$fcom_r[i_adj]     <- fcom_r
+        towers$fcom_p[i_adj]     <- fcom_p
+        towers$fcom_rmse[i_adj]  <- fcom_rmse
+        towers$fcom_sd[i_adj]    <- fcom_sd
+        towers$fcom_nrmse[i_adj] <- fcom_rmse / fcom_sd
+        
         if (fcom_p < 0.05) {
           fcom_report <- paste0("R2 = ", fcom_r, "; RMSE = ", fcom_rmse)
         } else {
@@ -211,9 +215,13 @@ for (j in 1:run_n) {
         fsat_r      <- round2(fsat_reg$adj.r.squared, 2, FALSE)
         fsat_p      <- round2(fsat_reg$coefficients[2,4], 2, FALSE)
         fsat_rmse   <- round2(sqrt(mean(fsat_reg$residuals^2)), 2, FALSE)
-        towers$fsat_r[i_adj]    <- fsat_r
-        towers$fsat_p[i_adj]    <- fsat_p
-        towers$fsat_rmse[i_adj] <- fsat_rmse
+        fsat_sd     <- round2(sd(fsat_site_month, na.rm = TRUE), 2, FALSE)
+        towers$fsat_r[i_adj]     <- fsat_r
+        towers$fsat_p[i_adj]     <- fsat_p
+        towers$fsat_rmse[i_adj]  <- fsat_rmse
+        towers$fsat_sd[i_adj]    <- fsat_sd
+        towers$fsat_nrmse[i_adj] <- fsat_rmse / fsat_sd
+        
         if (fsat_p < 0.05) {
           fsat_report <- paste0("R2 = ", fsat_r, "; RMSE = ", fsat_rmse)
         } else {
@@ -231,9 +239,13 @@ for (j in 1:run_n) {
         cf_r      <- round2(cf_reg$adj.r.squared, 2, FALSE)
         cf_p      <- round2(cf_reg$coefficients[2,4], 2, FALSE)
         cf_rmse   <- round2(sqrt(mean(cf_reg$residuals^2)), 2, FALSE)
-        towers$cf_r[i_adj]    <- cf_r
-        towers$cf_p[i_adj]    <- cf_p
-        towers$cf_rmse[i_adj] <- cf_rmse
+        cf_sd     <- round2(sd(cf_site_month, na.rm = TRUE), 2, FALSE)
+        towers$cf_r[i_adj]     <- cf_r
+        towers$cf_p[i_adj]     <- cf_p
+        towers$cf_rmse[i_adj]  <- cf_rmse
+        towers$cf_sd[i_adj]    <- cf_sd
+        towers$cf_nrmse[i_adj] <- cf_rmse / cf_sd
+        
         if (cf_p < 0.05) {
           cf_report <- paste0("R2 = ", cf_r, "; RMSE = ", cf_rmse)
         } else {
@@ -306,7 +318,7 @@ for (j in 1:run_n) {
       
     } else if (i_adj == (tower_df_len + 1)) {
       k34_details           <- t(data.frame(c("BR-K34", -2.6091, -60.2093, "EBF", 1999, 2006, "Wu et al. (2015)", 
-                                              "G:/SIF_comps/figs/Wu_2016/K34_GEP.csv", rep(NA, 12))))
+                                              "G:/SIF_comps/figs/Wu_2016/K34_GEP.csv", rep(NA, 18))))
       colnames(k34_details) <- colnames(towers)
       
       towers           <- rbind(towers, k34_details)
@@ -341,9 +353,13 @@ for (j in 1:run_n) {
         fcom_r      <- round2(fcom_reg$adj.r.squared, 2, FALSE)
         fcom_p      <- round2(fcom_reg$coefficients[2,4], 2, FALSE)
         fcom_rmse   <- round2(sqrt(mean(fcom_reg$residuals^2)), 2, FALSE)
-        towers$fcom_r[i_adj]    <- fcom_r
-        towers$fcom_p[i_adj]    <- fcom_p
-        towers$fcom_rmse[i_adj] <- fcom_rmse
+        fcom_sd     <- round2(sd(fcom_site_month, na.rm = TRUE), 2, FALSE)
+        towers$fcom_r[i_adj]     <- fcom_r
+        towers$fcom_p[i_adj]     <- fcom_p
+        towers$fcom_rmse[i_adj]  <- fcom_rmse
+        towers$fcom_sd[i_adj]    <- fcom_sd
+        towers$fcom_nrmse[i_adj] <- fcom_rmse / fcom_sd
+        
         if (fcom_p < 0.05) {
           fcom_report <- paste0("R2 = ", fcom_r, "; RMSE = ", fcom_rmse)
         } else {
@@ -358,9 +374,13 @@ for (j in 1:run_n) {
         fsat_r      <- round2(fsat_reg$adj.r.squared, 2, FALSE)
         fsat_p      <- round2(fsat_reg$coefficients[2,4], 2, FALSE)
         fsat_rmse   <- round2(sqrt(mean(fsat_reg$residuals^2)), 2, FALSE)
-        towers$fsat_r[i_adj]    <- fsat_r
-        towers$fsat_p[i_adj]    <- fsat_p
-        towers$fsat_rmse[i_adj] <- fsat_rmse
+        fsat_sd     <- round2(sd(fsat_site_month, na.rm = TRUE), 2, FALSE)
+        towers$fsat_r[i_adj]     <- fsat_r
+        towers$fsat_p[i_adj]     <- fsat_p
+        towers$fsat_rmse[i_adj]  <- fsat_rmse
+        towers$fsat_sd[i_adj]    <- fsat_sd
+        towers$fsat_nrmse[i_adj] <- fsat_rmse / fsat_sd
+        
         if (fsat_p < 0.05) {
           fsat_report <- paste0("R2 = ", fsat_r, "; RMSE = ", fsat_rmse)
         } else {
@@ -375,9 +395,13 @@ for (j in 1:run_n) {
         cf_r      <- round2(cf_reg$adj.r.squared, 2, FALSE)
         cf_p      <- round2(cf_reg$coefficients[2,4], 2, FALSE)
         cf_rmse   <- round2(sqrt(mean(cf_reg$residuals^2)), 2, FALSE)
-        towers$cf_r[i_adj]    <- cf_r
-        towers$cf_p[i_adj]    <- cf_p
-        towers$cf_rmse[i_adj] <- cf_rmse
+        cf_sd     <- round2(sd(cf_site_month, na.rm = TRUE), 2, FALSE)
+        towers$cf_r[i_adj]     <- cf_r
+        towers$cf_p[i_adj]     <- cf_p
+        towers$cf_rmse[i_adj]  <- cf_rmse
+        towers$cf_sd[i_adj]    <- cf_sd
+        towers$cf_nrmse[i_adj] <- cf_rmse / cf_sd
+        
         if (cf_p < 0.05) {
           cf_report <- paste0("R2 = ", cf_r, "; RMSE = ", cf_rmse)
         } else {
@@ -435,80 +459,80 @@ write.csv(towers, "G:/ChloFluo/comps/tower-data/site_list.csv", row.names = FALS
 
 # Model RMSE comparisons
 
-cairo_pdf("G:/ChloFluo/comps/rmse_comparisons_v2.pdf", width = 10.5, height = 7)
+cairo_pdf("G:/ChloFluo/comps/rmse_comparisons_v2.pdf", width = 8.5, height = 7)
 
-par(mfrow = c(3, 3), oma=c(0,0,0.5,0.25))
+par(mfrow = c(3, 3), oma=c(0,0,0.5,0.75))
 
 op <- par(mar = c(4,4.5,0,0))
 
-plot(towers$cf_rmse, towers$lat, axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(-60,60), yaxs = "i", col = "#DC267F")
+plot(towers$cf_nrmse, towers$lat, axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,1), ylim = c(-60,60), yaxs = "i", col = "#DC267F")
 axis(1, tck = 0.03, mgp=c(3, 0.2, 0))
 axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
 box()
-mtext(1, text = "ChloFluo RMSE", line = 2)
+mtext(1, text = "ChloFluo NRMSE", line = 2)
 mtext(2, text = "Latitude", line = 1.75)
 # mtext(3, text = "ChloFluo", line = 0.5)
 
-plot(towers$fcom_rmse, towers$lat, axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(-60,60), yaxs = "i", col = "#FE6100")
+plot(towers$fcom_nrmse, towers$lat, axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,1), ylim = c(-60,60), yaxs = "i", col = "#FE6100")
 axis(1, tck = 0.03, mgp=c(3, 0.2, 0))
 axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
 box()
-mtext(1, text = "FluxCom RMSE", line = 2)
+mtext(1, text = "FluxCom NRMSE", line = 2)
 mtext(2, text = "Latitude", line = 1.75)
 # mtext(3, text = "FluxCom", line = 0.5)
 
-plot(towers$fsat_rmse, towers$lat, axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(-60,60), yaxs = "i", col = "#648FFF")
+plot(towers$fsat_nrmse, towers$lat, axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,1), ylim = c(-60,60), yaxs = "i", col = "#648FFF")
 axis(1, tck = 0.03, mgp=c(3, 0.2, 0))
 axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
 box()
-mtext(1, text = "FluxSat RMSE", line = 2)
+mtext(1, text = "FluxSat NRMSE", line = 2)
 mtext(2, text = "Latitude", line = 1.75)
 # mtext(3, text = "FluxSat", line = 0.5)
 
-b <- boxplot(as.numeric(cf_rmse) ~ veg, data = towers, axes = FALSE, xlab = "", ylab = "", main = NA, yaxs = "i", col = "#DC267F", horizontal = TRUE)
+b <- boxplot(as.numeric(cf_nrmse) ~ veg, data = towers, axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(0,1), yaxs = "i", col = "#DC267F", horizontal = TRUE)
 axis(2, tck = FALSE, mgp=c(3, 0.2, 0), at = seq_along(b$names), labels = b$names, las = 2)
 axis(1, tck = 0.03, mgp=c(3, 0.2, 0))
 box()
 mtext(2, text = "Land Cover Type", line = 2.5)
-mtext(1, text = "ChloFluo RMSE", line = 2)
+mtext(1, text = "ChloFluo NRMSE", line = 2)
 
-b <- boxplot(as.numeric(fcom_rmse) ~ veg, data = towers, axes = FALSE, xlab = "", ylab = "", main = NA, yaxs = "i", col = "#FE6100", horizontal = TRUE)
+b <- boxplot(as.numeric(fcom_nrmse) ~ veg, data = towers, axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(0,1), yaxs = "i", col = "#FE6100", horizontal = TRUE)
 axis(2, tck = FALSE, mgp=c(3, 0.2, 0), at = seq_along(b$names), labels = b$names, las = 2)
 axis(1, tck = 0.03, mgp=c(3, 0.2, 0))
 box()
 mtext(2, text = "Land Cover Type", line = 2.5)
-mtext(1, text = "FluxCom RMSE", line = 2)
+mtext(1, text = "FluxCom NRMSE", line = 2)
 
-b <- boxplot(as.numeric(fsat_rmse) ~ veg, data = towers, axes = FALSE, xlab = "", ylab = "", main = NA, yaxs = "i", col = "#648FFF", horizontal = TRUE)
+b <- boxplot(as.numeric(fsat_nrmse) ~ veg, data = towers, axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(0,1), yaxs = "i", col = "#648FFF", horizontal = TRUE)
 axis(2, tck = FALSE, mgp=c(3, 0.2, 0), at = seq_along(b$names), labels = b$names, las = 2)
 axis(1, tck = 0.03, mgp=c(3, 0.2, 0))
 box()
 mtext(2, text = "Land Cover Type", line = 2.5)
-mtext(1, text = "FluxSat RMSE", line = 2)
+mtext(1, text = "FluxSat NRMSE", line = 2)
 
-plot(towers$cf_rmse, towers$fcom_rmse, axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(0,3), yaxs = "i")
-abline(lm(as.numeric(fcom_rmse) ~ as.numeric(cf_rmse), data = towers))
+plot(towers$cf_nrmse, towers$fcom_nrmse, axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,1), ylim = c(0,1), yaxs = "i")
+abline(lm(as.numeric(fcom_nrmse) ~ as.numeric(cf_nrmse), data = towers))
 axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
 axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
 box()
-mtext(1, text = "ChloFluo RMSE", line = 2)
-mtext(2, text = "FluxCom RMSE", line = 1.75)
+mtext(1, text = "ChloFluo NRMSE", line = 2)
+mtext(2, text = "FluxCom NRMSE", line = 1.75)
 
-plot(towers$cf_rmse, towers$fsat_rmse, axes = FALSE, xlab = "", ylab = "", main = NA, ylim = c(0,3), yaxs = "i")
-abline(lm(as.numeric(fsat_rmse) ~ as.numeric(cf_rmse), data = towers))
+plot(towers$cf_nrmse, towers$fsat_nrmse, axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,1), ylim = c(0,1), yaxs = "i")
+abline(lm(as.numeric(fsat_nrmse) ~ as.numeric(cf_nrmse), data = towers))
 axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
 axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
 box()
-mtext(1, text = "ChloFluo RMSE", line = 2)
-mtext(2, text = "FluxSat RMSE", line = 1.75)
+mtext(1, text = "ChloFluo NRMSE", line = 2)
+mtext(2, text = "FluxSat NRMSE", line = 1.75)
 
-plot(towers$fcom_rmse, towers$fsat_rmse, axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,3), ylim = c(0,3), yaxs = "i")
-abline(lm(as.numeric(fsat_rmse) ~ as.numeric(fcom_rmse), data = towers))
+plot(towers$fcom_nrmse, towers$fsat_nrmse, axes = FALSE, xlab = "", ylab = "", main = NA, xlim = c(0,1), ylim = c(0,1), yaxs = "i")
+abline(lm(as.numeric(fsat_nrmse) ~ as.numeric(fcom_nrmse), data = towers))
 axis(1, tck = FALSE, mgp=c(3, 0.2, 0))
 axis(2, tck = 0.03, mgp=c(3, 0.2, 0), las = 2)
 box()
-mtext(1, text = "FluxCom RMSE", line = 2)
-mtext(2, text = "FluxSat RMSE", line = 1.75)
+mtext(1, text = "FluxCom NRMSE", line = 2)
+mtext(2, text = "FluxSat NRMSE", line = 1.75)
 
 dev.off()
 
