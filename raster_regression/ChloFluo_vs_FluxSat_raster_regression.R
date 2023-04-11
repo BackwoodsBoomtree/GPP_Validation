@@ -1,46 +1,47 @@
 library(raster)
 
-cf_file  <- "G:/ChloFluo/product/v01/1deg/clipfill/ChloFluo.GPP.v01.1deg.CF80.2019.clipfill.nc"
-gpp_file <- list.files("G:/FluxSat", full.names = TRUE, pattern = "*.nc")
+cf_file  <- "G:/ChloFluo/product/v02/clipfill/ChloFluo.GPP.v02.1deg.CF80.2019.clipfill.nc"
+gpp_file <- "G:/FluxSat/monthly/1deg/GPP_FluxSat_8day_1deg_v2_2019.nc"
 y_name   <- "gpp"
 x_name   <- "GPP"
 out_dir  <- "G:/ChloFluo/comps/fluxsat/raster_regressions"
-out_name <- "ChloFluo_vs_FluxSat.v01.1deg.CF80.2019.clipfill"
+out_name <- "ChloFluo_vs_FluxSat.v02.1deg.CF80.2019.clipfill"
 f_name   <- NA # Filter by value. Example, error, std, or n. If none use NA.
 f_thresh <- 30  # Values => will be kept
 
 
 y <- brick(cf_file, varname = y_name)
+x <- brick(gpp_file, varname = x_name)
 
-# Create single brick from input files
-for (i in 1:(length(gpp_file))) {
-  
-  x_tmp <- brick(gpp_file[i], varname = x_name)
-  
-  if (i == 1) {
-    x <- x_tmp
-  } else {
-    x     <- addLayer(x, x_tmp)
-  }
-}
+# # Create single brick from input files
+# for (i in 1:(length(gpp_file))) {
+#   
+#   x_tmp <- brick(gpp_file[i], varname = x_name)
+#   
+#   if (i == 1) {
+#     x <- x_tmp
+#   } else {
+#     x     <- addLayer(x, x_tmp)
+#   }
+# }
+# 
+# # Do temporal aggregation (non-leap year)
+# for (i in seq(1, 365, by = 8)) {
+#   
+#   if (i != 361) {
+#     x_mean_tmp <- mean(x[[i : (i + 7)]], na.rm = TRUE)
+#   } else {
+#     x_mean_tmp <- mean(x[[i : (i +  4)]], na.rm = TRUE)
+#   }
+#   
+#   if (i == 1) {
+#     x_8day <- x_mean_tmp
+#   } else {
+#     x_8day <- addLayer(x_8day, x_mean_tmp)
+#   }
+# }
 
-# Do temporal aggregation (non-leap year)
-for (i in seq(1, 365, by = 8)) {
-  
-  if (i != 361) {
-    x_mean_tmp <- mean(x[[i : (i + 7)]], na.rm = TRUE)
-  } else {
-    x_mean_tmp <- mean(x[[i : (i +  4)]], na.rm = TRUE)
-  }
-  
-  if (i == 1) {
-    x_8day <- x_mean_tmp
-  } else {
-    x_8day <- addLayer(x_8day, x_mean_tmp)
-  }
-}
-
-x <- aggregate(x_8day, 20, fun = mean, na.rm = TRUE)
+# x <- aggregate(x_8day, 20, fun = mean, na.rm = TRUE)
 
 # writeRaster(x, "G:/FluxSat/1deg/GPP_FluxSat_8day_1deg_v2_2019.nc4", overwrite = TRUE, format="CDF", varname="GPP", varunit = "g C m-2 d-1", 
 #             longname="Gross Primary Production", xname = "Longitude", yname = "Latitude", zname = "Time")

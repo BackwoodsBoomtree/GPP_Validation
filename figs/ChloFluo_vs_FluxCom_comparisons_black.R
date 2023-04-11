@@ -3,7 +3,7 @@ library(viridis)
 library(rgdal)
 library(RColorBrewer)
 
-out_file <- "G:/ChloFluo/comps/fluxcom/ChloFluo_vs_FluxCom_comparisons_black_v2.pdf"
+out_file <- "G:/ChloFluo/comps/fluxcom/ChloFluo_vs_FluxCom_comparisons_v2.pdf"
 
 # Round up
 round2 = function(x, n) {
@@ -30,12 +30,13 @@ crs(coastlines)
 
 #### Load the data ####
 
-cf_annual_mean   <- raster("G:/ChloFluo/product/v02/clipfill/annual/ChloFluo.GPP.v01.1deg.CF80.2019.clipfill.annual.nc")
+cf_gpp           <- brick("G:/ChloFluo/product/v02/clipfill/ChloFluo.GPP.v02.1deg.CF80.2019.clipfill.nc")
 gpp              <- brick("G:/FluxCom/RS/GPP.RS_V006.FP-ALL.MLM-ALL.METEO-NONE.720_360.8daily.2019.nc", varname = "GPP")
-r2_map           <- raster("G:/ChloFluo/comps/fluxcom/raster_regressions/ChloFluo_vs_FluxCom.v01.1deg.CF80.2019.clipfill_Rsquare.tif")
-pval_map         <- raster("G:/ChloFluo/comps/fluxcom/raster_regressions/ChloFluo_vs_FluxCom.v01.1deg.CF80.2019.clipfill_Pval.tif")
+r2_map           <- raster("G:/ChloFluo/comps/fluxcom/raster_regressions/ChloFluo_vs_FluxCom.v02.1deg.CF80.2019.clipfill_Rsquare.tif")
+pval_map         <- raster("G:/ChloFluo/comps/fluxcom/raster_regressions/ChloFluo_vs_FluxCom.v02.1deg.CF80.2019.clipfill_Pval.tif")
 
 # Aggregate gpp 
+cf_annual_mean   <- mean(cf_gpp, na.rm = TRUE)
 gpp              <- aggregate(gpp, 2, fun = mean, na.rm = TRUE)
 gpp_annual_mean  <- mean(gpp, na.rm = TRUE) 
 
@@ -80,18 +81,18 @@ labs <- c(expression(paste("ChloFluo Mean Annual GPP 2019")),
 
 pdf(out_file, width=7.5, height=6, compress=FALSE)
 
-par(mfrow=c(3,2),oma=c(0,0.25,1.25,0), bg = "black")
+par(mfrow=c(3,2),oma=c(0,0.25,1.25,0))
 
 ##### ChloFluo ####
 
-op <- par(mar = c(0,0,0.25,0.25), bg = "black")
+op <- par(mar = c(0,0,0.25,0.25))
 plot(cf_annual_mean, ext=c(-180,180,-80,80), axes=F, xaxs="i", yaxs="i", horizontal=T, legend=F, col = NA)
-rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = NA, border = "white")
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4], col = "black")
 plot(coastlines, add = TRUE, border = NA, col = rgb(0.20,0.20,0.20))
-rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = NA, border = "white")
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = NA, border = "black")
 plot(cf_annual_mean, col=gpp.col,  ext=c(-180,180,-80,80), axes=F, xaxs="i", yaxs="i", horizontal=T, legend=F, add=T)
-mtext(3, text=labs[1], cex= 0.85, col = "white")
-mtext(3, text="a", cex= 0.85, adj=0, font=2, col = "white")
+mtext(3, text=labs[1], cex= 0.85)
+mtext(3, text="a", cex= 0.85, adj=0, font=2)
 
 plot(cf_annual_mean, legend.only=TRUE, col=gpp.col, horizontal=T, legend.width=2, legend.shrink=0.75,
      legend.args = list(text=expression(paste("g C m"^"-2"*"day"^"-1")), side = 1, line = -2, cex=0.70, col = "white"),
@@ -110,14 +111,14 @@ rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4], col = NA, border =
 
 ##### gpp ####
 
-op <- par(mar = c(0,0,0.25,0.25), bg = "black")
+op <- par(mar = c(0,0,0.25,0.25))
 plot(gpp_annual_mean, ext=c(-180,180,-80,80), axes=F, xaxs="i", yaxs="i", horizontal=T, legend=F, col = NA)
-rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = NA, border = "white")
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4], col = "black")
 plot(coastlines, add = TRUE, border = NA, col = rgb(0.20,0.20,0.20))
-rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = NA, border = "white")
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = NA, border = "black")
 plot(gpp_annual_mean, col=gpp.col,  ext=c(-180,180,-80,80), axes=F, xaxs="i", yaxs="i", horizontal=T, legend=F, add=T)
-mtext(3, text=labs[2], cex= 0.85, col = "white")
-mtext(3, text="b", cex= 0.85, adj=0, font=2, col = "white")
+mtext(3, text=labs[2], cex= 0.85)
+mtext(3, text="b", cex= 0.85, adj=0, font=2)
 
 plot(gpp_annual_mean, legend.only=TRUE, col=gpp.col, horizontal=T, legend.width=2, legend.shrink=0.75,
      legend.args = list(text=expression(paste("g C m"^"-2"*"day"^"-1")), side = 1, line = -2, cex=0.70, col = "white"),
@@ -141,12 +142,12 @@ med <- round(median(diff_annual_mean, na.rm=T), 2)
 diff_annual_mean[diff_annual_mean < -3.0] <- -3.0
 diff_annual_mean[diff_annual_mean > 3.0]  <- 3.0
 plot(diff_annual_mean, ext=c(-180,180,-80,80), axes=F, xaxs="i", yaxs="i", horizontal=T, legend=F, col = NA)
-rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = NA, border = "white")
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4], col = "black")
 plot(coastlines, add = TRUE, border = NA, col = rgb(0.20,0.20,0.20))
-rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = NA, border = "white")
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4], col = NA, border = "black")
 plot(diff_annual_mean, col=diff.col, ext=c(-180,180,-80,80), axes=F, xaxs="i", yaxs="i", legend=F, horizontal=T, add=T)
-mtext(3, text=labs[3], cex=0.85, col = "white")
-mtext(3, text="c", cex= 0.85, adj=0, font=2, col = "white")
+mtext(3, text=labs[3], cex=0.85)
+mtext(3, text="c", cex= 0.85, adj=0, font=2)
 
 
 plot(diff_annual_mean, legend.only=TRUE, col=diff.col, horizontal=T, legend.width=2, legend.shrink=0.75,
@@ -178,12 +179,12 @@ box(col = "white")
 ##### R2 map ####
 op <- par(mar = c(0,0,0.25,0.25))
 plot(r2_map, ext=c(-180,180,-80,80), axes=F, xaxs="i", yaxs="i", horizontal=T, legend=F, col = NA)
-rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = NA, border = "white")
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4], col = "black")
 plot(coastlines, add = TRUE, border = NA, col = rgb(0.20,0.20,0.20))
-rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = NA, border = "white")
+rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4], col = NA, border = "black")
 plot(r2_map, zlim=c(0.1,1), col=r2.col, ext=c(-180,180,-80,80), axes=F, xaxs="i", yaxs="i", legend=F, horizontal=T, add=T)
-mtext(3, text=labs[4], cex=0.85, col = "white")
-mtext(3, text="d", cex= 0.85, adj=0, font=2, col = "white")
+mtext(3, text=labs[4], cex=0.85)
+mtext(3, text="d", cex= 0.85, adj=0, font=2)
 
 
 plot(r2_map, zlim=c(0.1,1), legend.only=TRUE, col=r2.col, horizontal=T, legend.width=2, legend.shrink=0.75,

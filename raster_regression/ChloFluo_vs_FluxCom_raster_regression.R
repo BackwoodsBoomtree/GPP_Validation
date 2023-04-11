@@ -1,11 +1,11 @@
 library(raster)
 
-cf_file  <- "G:/ChloFluo/product/v01/1deg/clipfill/ChloFluo.GPP.v01.1deg.CF80.2019.clipfill.nc"
+cf_file  <- "G:/ChloFluo/product/v02/clipfill/ChloFluo.GPP.v02.1deg.CF80.2019.clipfill.nc"
 gpp_file <- "G:/FluxCom/RS/GPP.RS_V006.FP-ALL.MLM-ALL.METEO-NONE.720_360.8daily.2019.nc"
 y_name   <- "gpp"
 x_name   <- "GPP"
 out_dir  <- "G:/ChloFluo/comps/fluxcom/raster_regressions"
-out_name <- "ChloFluo_vs_FluxCom.v01.1deg.CF80.2019.clipfill"
+out_name <- "ChloFluo_vs_FluxCom.v02.1deg.CF80.2019.clipfill"
 f_name   <- NA # Filter by value. Example, error, std, or n. If none use NA.
 f_thresh <- 30  # Values => will be kept
 
