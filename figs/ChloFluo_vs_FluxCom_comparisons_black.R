@@ -34,11 +34,36 @@ cf_gpp           <- brick("G:/ChloFluo/product/v02/clipfill/ChloFluo.GPP.v02.1de
 gpp              <- brick("G:/FluxCom/RS/GPP.RS_V006.FP-ALL.MLM-ALL.METEO-NONE.720_360.8daily.2019.nc", varname = "GPP")
 r2_map           <- raster("G:/ChloFluo/comps/fluxcom/raster_regressions/ChloFluo_vs_FluxCom.v02.1deg.CF80.2019.clipfill_Rsquare.tif")
 pval_map         <- raster("G:/ChloFluo/comps/fluxcom/raster_regressions/ChloFluo_vs_FluxCom.v02.1deg.CF80.2019.clipfill_Pval.tif")
+land_percent     <- raster("G:/MCD12C1/2020/reprocessed/land_cover_percent.nc")
 
 # Aggregate gpp 
 cf_annual_mean   <- mean(cf_gpp, na.rm = TRUE)
 gpp              <- aggregate(gpp, 2, fun = mean, na.rm = TRUE)
-gpp_annual_mean  <- mean(gpp, na.rm = TRUE) 
+gpp_annual_mean  <- mean(gpp, na.rm = TRUE)
+
+### CALCULATE ANNUAL TOTAL Pg ####
+
+# Aggregate land cover percent
+land_percent_1deg <- aggregate(land_percent, 20, fun = mean, na.rm = TRUE)
+
+# Area for each grid cell in km2 converted to m2
+area_m2 <- area(cf_annual_mean) * 1000000
+
+# Land area per grid cell in m2
+land_area_m2 <- area_m2 * (land_percent_1deg / 100)
+
+# Annual total g C per land area per gridcell
+cf_gc  <- land_area_m2 * cf_annual_mean * 365
+gpp_gc <- land_area_m2 * gpp_annual_mean * 365
+
+# Annual total Pg C
+cf_annual_total  <- cellStats(cf_gc, sum, na.rm = TRUE) * 10^-15
+gpp_annual_total <- cellStats(gpp_gc, sum, na.rm = TRUE) * 10^-15
+
+print(paste0("Annual total Pg C for ChloFluo is: ", cf_annual_total))
+print(paste0("Annual total Pg C for FluxCom is: ", gpp_annual_total))      
+
+#####
 
 # Mask gpp by cf
 gpp_annual_mean  <- mask(gpp_annual_mean, cf_annual_mean)
