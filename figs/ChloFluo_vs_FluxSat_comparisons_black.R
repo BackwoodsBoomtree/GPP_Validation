@@ -28,7 +28,7 @@ coastlines <- readOGR("C:/Russell/R_Scripts/TROPOMI_2/mapping/GSHHS_shp/c/GSHHS_
 #### Load the data ####
 
 cf_gpp           <- brick("G:/ChloFluo/product/v02/clipfill/ChloFluo.GPP.v02.1deg.CF80.2019.clipfill.nc")
-gpp              <- brick("G:/FluxSat/monthly/1deg/GPP_FluxSat_8day_1deg_v2_2019.nc", varname = "GPP")
+gpp              <- brick("G:/FluxSat/8day/GPP_FluxSat_8day_1deg_v2_2019.nc", varname = "GPP")
 r2_map           <- raster("G:/ChloFluo/comps/fluxsat/raster_regressions/ChloFluo_vs_FluxSat.v02.1deg.CF80.2019.clipfill_Rsquare.tif")
 pval_map         <- raster("G:/ChloFluo/comps/fluxsat/raster_regressions/ChloFluo_vs_FluxSat.v02.1deg.CF80.2019.clipfill_Pval.tif")
 land_percent     <- raster("G:/MCD12C1/2020/reprocessed/land_cover_percent.nc")
