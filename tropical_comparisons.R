@@ -3,11 +3,11 @@ library(viridis)
 library(rgdal)
 library(RColorBrewer)
 
-out_name <- "G:/ChloFluo/comps/tropical_comparisons.pdf"
+out_name <- "G:/ChloFluo/comps/tropical_comparisons_v2.pdf"
 
-cf_file    <- "G:/ChloFluo/product/v01/1deg/clipfill/ChloFluo.GPP.v01.1deg.CF80.2019.clipfill.nc"
+cf_file    <- "G:/ChloFluo/product/v02/clipfill/ChloFluo.GPP.v02.1deg.CF80.2019.clipfill.nc"
 fcom_file  <- "G:/FluxCom/RS/GPP.RS_V006.FP-ALL.MLM-ALL.METEO-NONE.720_360.8daily.2019.nc"
-fsat_files <- list.files("G:/FluxSat", full.names = TRUE, pattern = "*.nc")
+fsat_files <- list.files("G:/FluxSat/original", full.names = TRUE, pattern = "*.nc")
 sif_file   <- "G:/ChloFluo/input/SIF/1deg/SIFqc.8day.1deg.CF80.2019.nc"
 sify_file  <- "G:/ChloFluo/input/yield/1deg/yield.2019.8-day.1deg.nc"
 apar_file  <- "G:/ChloFluo/input/APARchl/1deg/apar.2019.8-day.1deg.nc"
@@ -50,6 +50,7 @@ for (i in seq(1, 365, by = 8)) {
   } else {
     fsat_8day <- c(fsat_8day, fsat_mean_tmp)
   }
+  gc()
 }
 
 fsat <- aggregate(fsat_8day, 20, fun = mean, na.rm = TRUE)

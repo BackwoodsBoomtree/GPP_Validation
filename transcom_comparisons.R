@@ -3,9 +3,9 @@ library(viridis)
 library(rgdal)
 library(RColorBrewer)
 
-out_name <- "G:/ChloFluo/comps/transcom_comparisons.pdf"
+save_name <- "G:/ChloFluo/comps/transcom_comparisons_v2.pdf"
 
-cf_file    <- "G:/ChloFluo/product/v01/1deg/clipfill/ChloFluo.GPP.v01.1deg.CF80.2019.clipfill.nc"
+cf_file    <- "G:/ChloFluo/product/v02/clipfill/ChloFluo.GPP.v02.1deg.CF80.2019.clipfill.nc"
 fcom_file  <- "G:/FluxCom/RS/GPP.RS_V006.FP-ALL.MLM-ALL.METEO-NONE.720_360.8daily.2019.nc"
 fsat_files <- "G:/FluxSat/monthly/1deg/GPP_FluxSat_8day_1deg_v2_2019.nc"
 regions    <- rast("G:/TransCom/regions.nc", subds = "transcom_regions")
@@ -53,7 +53,7 @@ x            <- 1:46
 xpos         <- seq(1, 46, by = 4)
 xlabs        <- seq(1, 365, by = 64)
 y_lab_gpp    <- bquote("Gross Primary Production (g C m"^"-2"*" d"^"-1"*")")
-y_limit_gpp  <- c(0,12)
+y_limit_gpp  <- c(0,14)
 
 mag.cols <- magma(11)
 vir.cols <- viridis(7)
@@ -65,7 +65,7 @@ map.cols <- c(map.cols[1], map.cols[11], map.cols[2], map.cols[10],
               map.cols[5], map.cols[7], map.cols[6])
 
 ### PLOT
-cairo_pdf(out_name, width = 7.5, height = 7.25)
+cairo_pdf(save_name, width = 7.5, height = 7.25)
 
 par(mfrow = c(4, 3), oma=c(3.0,3.5,0,0.1))
 
